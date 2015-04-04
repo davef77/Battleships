@@ -21,11 +21,14 @@ class GameSheet:
 
         self.rules.ship_added(ship)
 
-    def set_cell_value(self, row, column, value):
-        self.sheet[row][column] = value
+    def on_cell_occupied(self, row, column, value):
+        self._set_cell_value(row, column, value)
 
     def cell_value(self, row, column):
         return self.sheet[row][column]
+
+    def _set_cell_value(self, row, column, value):
+        self.sheet[row][column] = value
 
     def __str__(self):
         sheet = ""

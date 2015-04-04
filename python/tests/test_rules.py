@@ -2,7 +2,7 @@ from unittest import TestCase
 from mock import MagicMock
 from python.orientation import Horizontal, Vertical
 from python.rules import Rules
-from python.ships import AircraftCarrier, Submarine
+from python.ships import AircraftCarrier, Submarine, Cruiser
 
 
 class RulesTest(TestCase):
@@ -36,8 +36,20 @@ class RulesTest(TestCase):
     def test_should_reject_addition_of_submarine_that_overflows_the_sheet_vertically(self):
         self.assertShipPositionInvalid(Submarine, 'I8', Vertical)
 
+    def test_should_reject_addition_of_ship_at_same_location_as_existing_ship(self):
+        self.rules.ship_added(AircraftCarrier('C3', Horizontal))
+        self.assertShipPositionInvalid(Cruiser, 'C3', Horizontal)
+
+    def test_should_reject_addition_of_ship_overlaping_existing_ship(self):
+        self.rules.ship_added(AircraftCarrier('C3', Horizontal))
+        self.assertShipPositionInvalid(Cruiser, 'C5', Horizontal)
+
+    def test_should_reject_addition_of_ship_crossing_existing_ship(self):
+        self.rules.ship_added(AircraftCarrier('C3', Horizontal))
+        self.assertShipPositionInvalid(Cruiser, 'A4', Vertical)
+
     def assertShipPositionInvalid(self, shipClass, location, orientation):
-        with self.assertRaises(IndexError):
+        with self.assertRaises(Warning):
             self.rules.assert_can_add_ship(self.sheet, shipClass(location, orientation))
 
 
