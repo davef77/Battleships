@@ -9,10 +9,6 @@ class ShipTestCase(TestCase):
         self.assertEqual(row, ship.row)
         self.assertEqual(column, ship.column)
 
-    def assertShipPositionInvalid(self, sheet, shipClass, location, orientation):
-        with self.assertRaises(IndexError):
-            shipClass(sheet, location, orientation)
-
 
 class AircraftCarrierTest(ShipTestCase):
 
@@ -20,16 +16,10 @@ class AircraftCarrierTest(ShipTestCase):
         self.sheet = GameSheet()
 
     def test_should_parse_location_string_for_horizontal_location(self):
-        self.assertShipPosition(AircraftCarrier(self.sheet, 'A4', Horizontal), 'A', 4)
+        self.assertShipPosition(AircraftCarrier('A4', Horizontal), 'A', 4)
 
     def test_should_parse_location_string_for_vertical_location(self):
-        self.assertShipPosition(AircraftCarrier(self.sheet, 'D1', Vertical), 'D', 1)
-
-    def test_should_throw_exception_when_adding_ship_that_overflows_the_sheet_horizontally(self):
-        self.assertShipPositionInvalid(self.sheet, AircraftCarrier, 'A5', Horizontal)
-
-    def test_should_throw_exception_when_adding_ship_that_overflows_the_sheet_vertically(self):
-        self.assertShipPositionInvalid(self.sheet, AircraftCarrier, 'E1', Vertical)
+        self.assertShipPosition(AircraftCarrier('D1', Vertical), 'D', 1)
 
 
 class BattleshipTest(ShipTestCase):
@@ -38,16 +28,10 @@ class BattleshipTest(ShipTestCase):
         self.sheet = GameSheet()
 
     def test_should_parse_location_string_for_horizontal_location(self):
-        self.assertShipPosition(Battleship(self.sheet, 'A5', Horizontal), 'A', 5)
+        self.assertShipPosition(Battleship('A5', Horizontal), 'A', 5)
 
     def test_should_parse_location_string_for_vertical_location(self):
-        self.assertShipPosition(Battleship(self.sheet, 'E1', Vertical), 'E', 1)
-
-    def test_should_throw_exception_when_adding_ship_that_overflows_the_sheet_horizontally(self):
-        self.assertShipPositionInvalid(self.sheet, Battleship, 'A6', Horizontal)
-
-    def test_should_throw_exception_when_adding_ship_that_overflows_the_sheet_vertically(self):
-        self.assertShipPositionInvalid(self.sheet, Battleship, 'F1', Vertical)
+        self.assertShipPosition(Battleship('E1', Vertical), 'E', 1)
 
 
 class CruiserTest(ShipTestCase):
@@ -56,16 +40,10 @@ class CruiserTest(ShipTestCase):
         self.sheet = GameSheet()
 
     def test_should_parse_location_string_for_horizontal_location(self):
-        self.assertShipPosition(Cruiser(self.sheet, 'A6', Horizontal), 'A', 6)
+        self.assertShipPosition(Cruiser('A6', Horizontal), 'A', 6)
 
     def test_should_parse_location_string_for_vertical_location(self):
-        self.assertShipPosition(Cruiser(self.sheet, 'F1', Vertical), 'F', 1)
-
-    def test_should_throw_exception_when_adding_ship_that_overflows_the_sheet_horizontally(self):
-        self.assertShipPositionInvalid(self.sheet, Cruiser, 'A7', Horizontal)
-
-    def test_should_throw_exception_when_adding_ship_that_overflows_the_sheet_vertically(self):
-        self.assertShipPositionInvalid(self.sheet, Cruiser, 'G1', Vertical)
+        self.assertShipPosition(Cruiser('F1', Vertical), 'F', 1)
 
 
 class DestroyerTest(ShipTestCase):
@@ -74,16 +52,10 @@ class DestroyerTest(ShipTestCase):
         self.sheet = GameSheet()
 
     def test_should_parse_location_string_for_horizontal_location_for_horizontal_location(self):
-        self.assertShipPosition(Destroyer(self.sheet, 'B7', Horizontal), 'B', 7)
+        self.assertShipPosition(Destroyer('B7', Horizontal), 'B', 7)
 
     def test_should_parse_location_string_for_vertical_location(self):
-        self.assertShipPosition(Destroyer(self.sheet, 'G2', Vertical), 'G', 2)
-
-    def test_should_throw_exception_when_adding_ship_that_overflows_the_sheet_horizontally(self):
-        self.assertShipPositionInvalid(self.sheet, Destroyer, 'D8', Horizontal)
-
-    def test_should_throw_exception_when_adding_ship_that_overflows_the_sheet_vertically(self):
-        self.assertShipPositionInvalid(self.sheet, Destroyer, 'H8', Vertical)
+        self.assertShipPosition(Destroyer('G2', Vertical), 'G', 2)
 
 
 class SubmarineTest(ShipTestCase):
@@ -92,14 +64,8 @@ class SubmarineTest(ShipTestCase):
         self.sheet = GameSheet()
 
     def test_should_parse_location_string_for_horizontal_location(self):
-        self.assertShipPosition(Submarine(self.sheet, 'B8', Horizontal), 'B', 8)
+        self.assertShipPosition(Submarine('B8', Horizontal), 'B', 8)
 
     def test_should_parse_location_string_for_vertical_location(self):
-        self.assertShipPosition(Submarine(self.sheet, 'G8', Vertical), 'G', 8)
-
-    def test_should_throw_exception_when_adding_ship_that_overflows_the_sheet_horizontally(self):
-        self.assertShipPositionInvalid(self.sheet, Submarine, 'D9', Horizontal)
-
-    def test_should_throw_exception_when_adding_ship_that_overflows_the_sheet_vertically(self):
-        self.assertShipPositionInvalid(self.sheet, Submarine, 'I8', Vertical)
+        self.assertShipPosition(Submarine('G8', Vertical), 'G', 8)
 
