@@ -1,6 +1,7 @@
 from unittest import TestCase
 from python.gameSheet import GameSheet
 from python.orientation import Horizontal, Vertical
+from python.rules import Rules
 from python.ships import AircraftCarrier, Submarine
 
 ROW_A_END = 9
@@ -18,7 +19,7 @@ GAME_SHEET_WITH_VERT_SUBMARINE = "A........\nB........\nC....S...\nD........\nE.
 
 class GameSheetTest(TestCase):
     def setUp(self):
-        self.game = GameSheet()
+        self.game = GameSheet(Rules())
 
     def test_should_render_as_cartesian_plane(self):
         self.assertEqual(EMPTY_GAME_SHEET, str(self.game))
@@ -33,17 +34,6 @@ class GameSheetTest(TestCase):
 
         self.assertEquals(GAME_SHEET_WITH_VERT_AIRCRAFTCARRIER, str(self.game))
 
-    def test_should_reject_placement_of_second_aircraft_carrier(self):
-        self.game.add_ship(AircraftCarrier('A1', Horizontal))
-        with self.assertRaises(Warning):
-            self.game.add_ship(AircraftCarrier('B2', Horizontal))
-
-    def test_should_throw_exception_when_adding_ship_that_overflows_the_sheet_horizontally(self):
-        self.assertShipPositionInvalid(AircraftCarrier, 'A5', Horizontal)
-
-    def test_should_throw_exception_when_adding_ship_that_overflows_the_sheet_vertically(self):
-        self.assertShipPositionInvalid(AircraftCarrier, 'E1', Vertical)
-
     def test_should_place_a_submarine_horizontally(self):
         self.game.add_ship(Submarine('E3', Horizontal))
 
@@ -53,20 +43,3 @@ class GameSheetTest(TestCase):
         self.game.add_ship(Submarine('C5', Vertical))
 
         self.assertEquals(GAME_SHEET_WITH_VERT_SUBMARINE, str(self.game))
-
-    def test_should_reject_submarine_of_third_destroyer(self):
-        self.game.add_ship(Submarine('A1', Horizontal))
-        self.game.add_ship(Submarine('B2', Vertical))
-        with self.assertRaises(Warning):
-            self.game.add_ship(Submarine('B4', Horizontal))
-
-    def test_should_throw_exception_when_adding_submarine_that_overflows_the_sheet_horizontally(self):
-        self.assertShipPositionInvalid(Submarine, 'D9', Horizontal)
-
-    def test_should_throw_exception_when_adding_submarine_that_overflows_the_sheet_vertically(self):
-        self.assertShipPositionInvalid(Submarine, 'I8', Vertical)
-
-    def assertShipPositionInvalid(self, shipClass, location, orientation):
-        with self.assertRaises(IndexError):
-            self.game.add_ship(shipClass(location, orientation))
-

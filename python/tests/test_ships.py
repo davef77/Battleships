@@ -1,19 +1,20 @@
 from unittest import TestCase
 from python.gameSheet import GameSheet
 from python.orientation import Horizontal, Vertical
+from python.rules import Rules
 from python.ships import AircraftCarrier, Battleship, Cruiser, Destroyer, Submarine
 
 
 class ShipTestCase(TestCase):
+    def setUp(self):
+        self.sheet = GameSheet(Rules())
+
     def assertShipPosition(self, ship, row, column):
         self.assertEqual(row, ship.row)
         self.assertEqual(column, ship.column)
 
 
 class AircraftCarrierTest(ShipTestCase):
-
-    def setUp(self):
-        self.sheet = GameSheet()
 
     def test_should_parse_location_string_for_horizontal_location(self):
         self.assertShipPosition(AircraftCarrier('A4', Horizontal), 'A', 4)
@@ -24,9 +25,6 @@ class AircraftCarrierTest(ShipTestCase):
 
 class BattleshipTest(ShipTestCase):
 
-    def setUp(self):
-        self.sheet = GameSheet()
-
     def test_should_parse_location_string_for_horizontal_location(self):
         self.assertShipPosition(Battleship('A5', Horizontal), 'A', 5)
 
@@ -35,9 +33,6 @@ class BattleshipTest(ShipTestCase):
 
 
 class CruiserTest(ShipTestCase):
-
-    def setUp(self):
-        self.sheet = GameSheet()
 
     def test_should_parse_location_string_for_horizontal_location(self):
         self.assertShipPosition(Cruiser('A6', Horizontal), 'A', 6)
@@ -48,9 +43,6 @@ class CruiserTest(ShipTestCase):
 
 class DestroyerTest(ShipTestCase):
 
-    def setUp(self):
-        self.sheet = GameSheet()
-
     def test_should_parse_location_string_for_horizontal_location_for_horizontal_location(self):
         self.assertShipPosition(Destroyer('B7', Horizontal), 'B', 7)
 
@@ -59,9 +51,6 @@ class DestroyerTest(ShipTestCase):
 
 
 class SubmarineTest(ShipTestCase):
-
-    def setUp(self):
-        self.sheet = GameSheet()
 
     def test_should_parse_location_string_for_horizontal_location(self):
         self.assertShipPosition(Submarine('B8', Horizontal), 'B', 8)
