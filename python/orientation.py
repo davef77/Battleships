@@ -31,5 +31,5 @@ class Vertical():
     def place_ship(cls, position_listener, ship):
         ship_row = ROW_NAMES.index(ship.row)
         for row in ROW_NAMES[ship_row:ship_row + ship.waterline_length]:
-            position_listener.on_cell_occupied(row, ship.column - 1, ship)
+            position_listener.on_cell_occupied(row, ship.column - 1, ship.id)
 
