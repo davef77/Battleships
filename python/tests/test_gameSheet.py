@@ -49,6 +49,11 @@ class GameSheetTest(TestCase):
 
         self._assert_ships_placed(self.game, {'A': 5, 'B': 4, 'C': 3, 'D': 4, 'S': 2})
 
+    def test_should_place_shot(self):
+        self.game.fire("A1")
+
+        self.assertEquals("Ax.......", str(self.game)[:ROW_A_END])
+
     def _assert_ships_placed(self, game, expected_ships):
         sheet = self._clean_sheet(game)
 

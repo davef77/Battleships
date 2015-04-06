@@ -1,6 +1,9 @@
+from python.game_utils import parse_location
+
+
 class Ship():
     def __init__(self, location, orientation):
-        self.row, self.column = _parse_location(location)
+        self.row, self.column = parse_location(location)
         self.orientation = orientation
 
 
@@ -49,8 +52,7 @@ class Submarine(Ship):
         Ship.__init__(self, location, orientation)
 
 
-def _parse_location(location):
-    return location[:1], int(location[1:])
+
 
 
 
