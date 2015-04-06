@@ -1,8 +1,8 @@
 from unittest import TestCase
 from mock import MagicMock
 from python.orientation import Horizontal, Vertical
-from python.rules import Rules, Hit, Miss
-from python.ships import AircraftCarrier, Submarine, Cruiser, Battleship, Destroyer
+from python.rules import Rules
+from python.ships import AircraftCarrier, Submarine, Cruiser, Battleship, Destroyer, Hit, Miss, Sunk
 
 
 class RulesTest(TestCase):
@@ -62,13 +62,24 @@ class RulesTest(TestCase):
         self.assertTrue(types.__contains__(Destroyer))
         self.assertTrue(types.__contains__(Submarine))
 
-    def test_should_record_a_hit(self):
+    def test_should_record_a_hit_when_ship_is_hit(self):
         self.rules.ship_added(AircraftCarrier('A1', Horizontal))
-        self.assertEqual(Hit, self.rules.fire("A1"))
+        self.assertIsInstance(self.rules.fire("A1"), Hit)
 
-    def test_should_record_a_miss(self):
+    def test_should_record_a_miss_when_no_ship_is_hit(self):
         self.rules.ship_added(AircraftCarrier('A1', Horizontal))
-        self.assertEqual(Miss, self.rules.fire("B1"))
+        self.assertIsInstance(self.rules.fire("B1"), Miss)
+
+    def test_should_record_sunk_when_all_cells_in_ship_are_hit(self):
+        self.rules.ship_added(Destroyer('A1', Horizontal))
+        self.assertIsInstance(self.rules.fire("A1"), Hit)
+        self.assertIsInstance(self.rules.fire("A2"), Sunk)
+
+    def test_should_remove_sunk_ship(self):
+        self.rules.ship_added(Destroyer('A1', Horizontal))
+        self.assertIsInstance(self.rules.fire("A1"), Hit)
+        self.assertIsInstance(self.rules.fire("A2"), Sunk)
+        self.assertIsInstance(self.rules.fire("A2"), Miss)
 
     def assertShipPositionInvalid(self, shipClass, location, orientation):
         with self.assertRaises(Warning):
