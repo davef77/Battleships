@@ -1,7 +1,7 @@
 from unittest import TestCase
 from mock import MagicMock
 from python.orientation import Horizontal, Vertical
-from python.rules import Rules
+from python.rules import Rules, Hit, Miss
 from python.ships import AircraftCarrier, Submarine, Cruiser, Battleship, Destroyer
 
 
@@ -61,6 +61,14 @@ class RulesTest(TestCase):
         self.assertTrue(types.__contains__(Cruiser))
         self.assertTrue(types.__contains__(Destroyer))
         self.assertTrue(types.__contains__(Submarine))
+
+    def test_should_record_a_hit(self):
+        self.rules.ship_added(AircraftCarrier('A1', Horizontal))
+        self.assertEqual(Hit, self.rules.fire("A1"))
+
+    def test_should_record_a_miss(self):
+        self.rules.ship_added(AircraftCarrier('A1', Horizontal))
+        self.assertEqual(Miss, self.rules.fire("B1"))
 
     def assertShipPositionInvalid(self, shipClass, location, orientation):
         with self.assertRaises(Warning):

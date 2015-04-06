@@ -2,6 +2,12 @@ from python.gameSheet import ROW_NAMES
 from python.ships import AircraftCarrier, Battleship, Cruiser, Destroyer, Submarine
 
 
+class Hit: pass
+
+
+class Miss: pass
+
+
 class Rules:
     def __init__(self):
         self.ships = {}
@@ -19,6 +25,12 @@ class Rules:
             self.ships[ship.id] = 1
 
         self._mark_occupied_cells(ship)
+
+    def fire(self, location):
+        if self.occupied_cells.__contains__(location):
+            return Hit
+        else:
+            return Miss
 
     def list_ship_types(self):
         return [AircraftCarrier, Battleship, Cruiser, Destroyer, Destroyer, Submarine, Submarine]

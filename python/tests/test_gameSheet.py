@@ -1,7 +1,7 @@
 from unittest import TestCase
 from python.gameSheet import GameSheet
 from python.orientation import Horizontal, Vertical
-from python.rules import Rules
+from python.rules import Rules, Hit, Miss
 from python.ships import AircraftCarrier, Submarine
 
 ROW_A_END = 9
@@ -53,6 +53,14 @@ class GameSheetTest(TestCase):
         self.game.fire("A1")
 
         self.assertEquals("Ax.......", str(self.game)[:ROW_A_END])
+
+    def test_should_record_a_hit(self):
+        self.game.add_ship(AircraftCarrier('A1', Horizontal))
+        self.assertEqual(Hit, self.game.fire("A1"))
+
+    def test_should_record_a_miss(self):
+        self.game.add_ship(AircraftCarrier('A1', Horizontal))
+        self.assertEqual(Miss, self.game.fire("B1"))
 
     def _assert_ships_placed(self, game, expected_ships):
         sheet = self._clean_sheet(game)

@@ -29,6 +29,8 @@ class GameSheet:
         row, column = parse_location(location)
         self._set_cell_value(row, column, 'x')
 
+        return self.rules.fire(location)
+
     def position_ships(self):
         for ship_type in self.rules.list_ship_types():
             self._place_ship_at_random_position(ship_type)
