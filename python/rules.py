@@ -1,4 +1,5 @@
 from python.gameSheet import ROW_NAMES
+from python.ships import AircraftCarrier, Battleship, Cruiser, Destroyer, Submarine
 
 
 class Rules:
@@ -19,6 +20,9 @@ class Rules:
 
         self._mark_occupied_cells(ship)
 
+    def list_ship_types(self):
+        return [AircraftCarrier, Battleship, Cruiser, Destroyer, Destroyer, Submarine, Submarine]
+
     def on_cell_occupied(self, row, column, value):
         self.occupied_cells.add("%s%s" % (row, column))
 
@@ -29,16 +33,16 @@ class Rules:
         if not ROW_NAMES.__contains__(ship.row) or ROW_NAMES.index(ship.row) >= max_row or ship.column > max_column:
             raise Warning("Ship placed out of bounds")
 
-    def _assert_is_placed_in_clear_space(self,ship):
+    def _assert_is_placed_in_clear_space(self, ship):
         occupied_cells = self.occupied_cells
-        self.occupied_cells = set()
-        ship.orientation.place_ship(self, ship)
+        try:
+            self.occupied_cells = set()
+            ship.orientation.place_ship(self, ship)
 
-        if occupied_cells & self.occupied_cells:
-            raise Warning("Ship conflicts with a previously placed ship")
-
-
-        self.occupied_cells = occupied_cells
+            if occupied_cells & self.occupied_cells:
+                raise Warning("Ship conflicts with a previously placed ship")
+        finally:
+            self.occupied_cells = occupied_cells
 
     def _assert_within_allowed_number_for_type(self, ship):
         if self.ships.has_key(ship.id) and self.ships[ship.id] == ship.max_of_type:

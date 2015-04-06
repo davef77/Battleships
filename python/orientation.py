@@ -1,4 +1,4 @@
-from python.gameSheet import ROW_NAMES
+ROW_NAMES = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
 
 
 class Horizontal():
@@ -14,7 +14,7 @@ class Horizontal():
     @classmethod
     def place_ship(cls, position_listener, ship):
         for column in range(ship.column, ship.column + ship.waterline_length):
-            position_listener.on_cell_occupied(ship.row, column - 1, ship.id)
+            position_listener.on_cell_occupied(ship.row, column, ship.id)
 
 
 class Vertical():
@@ -31,5 +31,8 @@ class Vertical():
     def place_ship(cls, position_listener, ship):
         ship_row = ROW_NAMES.index(ship.row)
         for row in ROW_NAMES[ship_row:ship_row + ship.waterline_length]:
-            position_listener.on_cell_occupied(row, ship.column - 1, ship)
+            position_listener.on_cell_occupied(row, ship.column, ship.id)
+
+ORIENTATIONS = [Vertical, Horizontal]
+
 

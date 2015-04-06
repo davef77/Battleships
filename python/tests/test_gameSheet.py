@@ -43,3 +43,27 @@ class GameSheetTest(TestCase):
         self.game.add_ship(Submarine('C5', Vertical))
 
         self.assertEquals(GAME_SHEET_WITH_VERT_SUBMARINE, str(self.game))
+
+    def test_should_populate_with_ships(self):
+        self.game.position_ships()
+
+        sheet = list(str(self.game).replace("12345678", ""))
+
+        for i in range(0, sheet.__len__(), 10):
+            sheet[i] = '.'
+
+        ships = {'A': 5, 'B': 4, 'C': 3, 'D': 4, 'S': 2}
+
+        count = {}
+
+        for ship in ships.iterkeys():
+            count[ship] = 0
+
+        for ship in sheet:
+            if ships.has_key(ship):
+                count[ship] += 1
+
+        print self.game
+
+        for key in count.iterkeys():
+            self.assertEqual(count[key], ships[key], "Count for '%s' doesn't match" % key)

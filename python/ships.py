@@ -1,4 +1,3 @@
-
 class Ship():
     def __init__(self, location, orientation):
         self.row, self.column = _parse_location(location)

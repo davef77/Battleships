@@ -2,7 +2,7 @@ from unittest import TestCase
 from mock import MagicMock
 from python.orientation import Horizontal, Vertical
 from python.rules import Rules
-from python.ships import AircraftCarrier, Submarine, Cruiser
+from python.ships import AircraftCarrier, Submarine, Cruiser, Battleship, Destroyer
 
 
 class RulesTest(TestCase):
@@ -47,6 +47,23 @@ class RulesTest(TestCase):
     def test_should_reject_addition_of_ship_crossing_existing_ship(self):
         self.rules.ship_added(AircraftCarrier('C3', Horizontal))
         self.assertShipPositionInvalid(Cruiser, 'A4', Vertical)
+
+    def test_should_reject_addition_of_ship_crossing_existing_ship2(self):
+        self.rules.ship_added(AircraftCarrier('C3', Vertical))
+        self.assertShipPositionInvalid(Destroyer, 'F2', Horizontal)
+
+    def test_should_reject_addition_of_ship_crossing_existing_ship3(self):
+        self.rules.ship_added(Destroyer('F2', Horizontal))
+        self.assertShipPositionInvalid(AircraftCarrier, 'C3', Vertical)
+
+    def test_should_list_types_of_ships_permitted(self):
+        types = self.rules.list_ship_types()
+
+        self.assertTrue(types.__contains__(AircraftCarrier))
+        self.assertTrue(types.__contains__(Battleship))
+        self.assertTrue(types.__contains__(Cruiser))
+        self.assertTrue(types.__contains__(Destroyer))
+        self.assertTrue(types.__contains__(Submarine))
 
     def assertShipPositionInvalid(self, shipClass, location, orientation):
         with self.assertRaises(Warning):
