@@ -49,6 +49,18 @@ class BattleShipsTest(TestCase):
         self.assertEquals("A.x......", offense[ROW_A_START:ROW_A_END])
         self.assertEquals("B..X.....", offense[ROW_B_START:ROW_B_END])
 
+    def test_should_show_my_opponents_hits_and_misses(self):
+        self.battleships.new_game("Player1", "Player2")
+        self.battleships.place_ship("Player1", "AB1H")
+
+        self.battleships.fire("Player2", "A2")
+        self.battleships.fire("Player2", "B3")
+
+        defense = self.battleships.show_defense("Player1")
+
+        self.assertEquals("A.x......", defense[ROW_A_START:ROW_A_END])
+        self.assertEquals("BAAXAA...", defense[ROW_B_START:ROW_B_END])
+
     def _real_factory(self):
         self.factory = GameSheetFactory()
         self.battleships = BattleShips(self.factory)
