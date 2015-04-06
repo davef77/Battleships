@@ -48,13 +48,10 @@ class RulesTest(TestCase):
         self.rules.ship_added(AircraftCarrier('C3', Horizontal))
         self.assertShipPositionInvalid(Cruiser, 'A4', Vertical)
 
-    def test_should_reject_addition_of_ship_crossing_existing_ship2(self):
-        self.rules.ship_added(AircraftCarrier('C3', Vertical))
-        self.assertShipPositionInvalid(Destroyer, 'F2', Horizontal)
-
-    def test_should_reject_addition_of_ship_crossing_existing_ship3(self):
-        self.rules.ship_added(Destroyer('F2', Horizontal))
-        self.assertShipPositionInvalid(AircraftCarrier, 'C3', Vertical)
+    def test_should_reject_addition_of_ship_crossing_existing_ship_after_failure_to_place(self):
+        self.rules.ship_added(AircraftCarrier('C3', Horizontal))
+        self.assertShipPositionInvalid(Cruiser, 'A4', Vertical)
+        self.assertShipPositionInvalid(Cruiser, 'C5', Vertical)
 
     def test_should_list_types_of_ships_permitted(self):
         types = self.rules.list_ship_types()
