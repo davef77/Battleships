@@ -37,29 +37,55 @@ class BattleShipsTest(TestCase):
 
         self.assertIsInstance(self.battleships.fire("Player1", "B2"), Hit)
 
-    def test_should_show_my_hits_and_misses(self):
+    def test_should_show_my_hits(self):
         self.battleships.new_game("Player1", "Player2")
         self.battleships.place_ship("Player2", "AB1H")
 
-        self.battleships.fire("Player1", "A2")
         self.battleships.fire("Player1", "B3")
 
         offense = self.battleships.show_offense("Player1")
 
-        self.assertEquals("A.x......", offense[ROW_A_START:ROW_A_END])
         self.assertEquals("B..X.....", offense[ROW_B_START:ROW_B_END])
 
-    def test_should_show_my_opponents_hits_and_misses(self):
+    def test_should_show_my_misses(self):
+        self.battleships.new_game("Player1", "Player2")
+        self.battleships.place_ship("Player2", "AB1H")
+
+        self.battleships.fire("Player1", "A2")
+
+        offense = self.battleships.show_offense("Player1")
+
+        self.assertEquals("A.x......", offense[ROW_A_START:ROW_A_END])
+
+    def test_should_show_my_opponents_hits(self):
         self.battleships.new_game("Player1", "Player2")
         self.battleships.place_ship("Player1", "AB1H")
 
-        self.battleships.fire("Player2", "A2")
         self.battleships.fire("Player2", "B3")
 
         defense = self.battleships.show_defense("Player1")
 
-        self.assertEquals("A.x......", defense[ROW_A_START:ROW_A_END])
         self.assertEquals("BAAXAA...", defense[ROW_B_START:ROW_B_END])
+
+    def test_should_show_my_opponents_hits_misses(self):
+        self.battleships.new_game("Player1", "Player2")
+        self.battleships.place_ship("Player1", "AB1H")
+
+        self.battleships.fire("Player2", "A2")
+
+        defense = self.battleships.show_defense("Player1")
+
+        self.assertEquals("A.x......", defense[ROW_A_START:ROW_A_END])
+
+    def test_should_return_fire_after_each_move_when_playing_against_the_computer(self):
+        self.battleships.new_game("Player1", "Computer")
+        self.battleships.place_ship("Player1", "AB1H")
+
+        self.assertEquals(0, count_hits_and_misses(self.battleships.show_defense("Player1")))
+
+        self.battleships.fire("Player1", "A2")
+
+        self.assertEquals(1, count_hits_and_misses(self.battleships.show_defense("Player1")))
 
     def _real_factory(self):
         self.factory = GameSheetFactory()
@@ -68,3 +94,7 @@ class BattleShipsTest(TestCase):
     def _mock_factory(self):
         self.factory = MagicMock(spec=GameSheetFactory)
         self.battleships = BattleShips(self.factory)
+
+
+def count_hits_and_misses(sheet):
+    return sheet.count('x') + sheet.count('X')

@@ -1,4 +1,5 @@
 from python.gameSheet import GameSheet
+from python.game_utils import random_location
 from python.orientation import Horizontal, Vertical
 from python.rules import Rules
 from python.ships import AircraftCarrier, Battleship, Cruiser, Destroyer, Submarine
@@ -9,8 +10,10 @@ class BattleShips(object):
     def __init__(self, game_sheet_factory):
         self.game_sheet_factory = game_sheet_factory
         self.players = {}
+        self.computer_player = False
 
     def new_game(self, player1, player2):
+        self.computer_player = "Computer" in [player1, player2]
         self.players[player1] = self.game_sheet_factory.create_game_sheet()
         self.players[player2] = self.game_sheet_factory.create_game_sheet()
 
@@ -18,7 +21,12 @@ class BattleShips(object):
         self.players[player].add_ship(self._create_ship(ship_details))
 
     def fire(self, player, location):
-        return self._other_players_sheet(player).fire(location)
+        fire_result = self._other_players_sheet(player).fire(location)
+
+        if self.computer_player:
+            self.players[player].fire(random_location())
+
+        return fire_result
 
     def show_defense(self, player):
         return str(self.players[player])

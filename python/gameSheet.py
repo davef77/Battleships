@@ -1,7 +1,5 @@
-from random import randint, choice
 from python.gameSheet_renderer import DefenseSheetRenderer, HitAndMissesSheetRenderer, MAX_COLUMNS, MAX_ROWS, ROW_NAMES
-from python.game_utils import parse_location
-from python.orientation import ORIENTATIONS
+from python.game_utils import parse_location, random_location, random_orientation
 from python.ships import Miss
 
 
@@ -66,16 +64,10 @@ class GameSheet:
     def _place_ship_at_random_position(self, ship_type):
         while True:
             try:
-                self.add_ship(ship_type(self._random_location(), self._random_orientation()))
+                self.add_ship(ship_type(random_location(), random_orientation()))
             except Warning:
                 continue
             break
-
-    def _random_location(self):
-        return "%s%s" % (choice(ROW_NAMES), randint(1, 8))
-
-    def _random_orientation(self):
-        return choice(ORIENTATIONS)
 
 
 
