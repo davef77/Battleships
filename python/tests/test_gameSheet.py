@@ -47,23 +47,32 @@ class GameSheetTest(TestCase):
     def test_should_populate_with_ships(self):
         self.game.position_ships()
 
-        sheet = list(str(self.game).replace("12345678", ""))
+        self._assert_ships_placed(self.game, {'A': 5, 'B': 4, 'C': 3, 'D': 4, 'S': 2})
 
-        for i in range(0, sheet.__len__(), 10):
-            sheet[i] = '.'
+    def _assert_ships_placed(self, game, expected_ships):
+        sheet = self._clean_sheet(game)
 
-        ships = {'A': 5, 'B': 4, 'C': 3, 'D': 4, 'S': 2}
+        count = self._init_count(expected_ships)
 
-        count = {}
-
-        for ship in ships.iterkeys():
-            count[ship] = 0
-
-        for ship in sheet:
-            if ships.has_key(ship):
-                count[ship] += 1
-
-        print self.game
+        self._count_ships(count, expected_ships, sheet)
 
         for key in count.iterkeys():
-            self.assertEqual(count[key], ships[key], "Count for '%s' doesn't match" % key)
+            self.assertEqual(count[key], expected_ships[key], "Count for '%s' doesn't match" % key)
+
+    def _clean_sheet(self, game):
+        sheet = list(str(game).replace("12345678", ""))
+        for i in range(0, sheet.__len__(), 10):
+            sheet[i] = '.'
+        return sheet
+
+    def _init_count(self, expected_ships):
+        count = {}
+        for ship in expected_ships.iterkeys():
+            count[ship] = 0
+        return count
+
+    def _count_ships(self, count, expected_ships, sheet):
+        for ship in sheet:
+            if expected_ships.has_key(ship):
+                count[ship] += 1
+
