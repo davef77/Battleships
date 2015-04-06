@@ -48,6 +48,11 @@ class RulesTest(TestCase):
         self.rules.ship_added(AircraftCarrier('C3', Horizontal))
         self.assertShipPositionInvalid(Cruiser, 'A4', Vertical)
 
+    def test_should_reject_addition_of_ship_crossing_existing_ship_after_failure_to_place(self):
+        self.rules.ship_added(AircraftCarrier('C3', Horizontal))
+        self.assertShipPositionInvalid(Cruiser, 'A4', Vertical)
+        self.assertShipPositionInvalid(Cruiser, 'C5', Vertical)
+
     def assertShipPositionInvalid(self, shipClass, location, orientation):
         with self.assertRaises(Warning):
             self.rules.assert_can_add_ship(self.sheet, shipClass(location, orientation))

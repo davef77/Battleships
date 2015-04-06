@@ -31,14 +31,15 @@ class Rules:
 
     def _assert_is_placed_in_clear_space(self,ship):
         occupied_cells = self.occupied_cells
-        self.occupied_cells = set()
-        ship.orientation.place_ship(self, ship)
+        try:
+            self.occupied_cells = set()
+            ship.orientation.place_ship(self, ship)
 
-        if occupied_cells & self.occupied_cells:
-            raise Warning("Ship conflicts with a previously placed ship")
+            if occupied_cells & self.occupied_cells:
+                raise Warning("Ship conflicts with a previously placed ship")
 
-
-        self.occupied_cells = occupied_cells
+        finally:
+            self.occupied_cells = occupied_cells
 
     def _assert_within_allowed_number_for_type(self, ship):
         if self.ships.has_key(ship.id) and self.ships[ship.id] == ship.max_of_type:
