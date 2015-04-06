@@ -12,6 +12,7 @@ ROW_E_END = 49
 EMPTY_GAME_SHEET = "A........\nB........\nC........\nD........\nE........\nF........\nG........\nH........\n.12345678"
 GAME_SHEET_WITH_VERT_AIRCRAFTCARRIER = "A........\nB..A.....\nC..A.....\nD..A.....\nE..A.....\nF..A.....\nG........\nH........\n.12345678"
 GAME_SHEET_WITH_VERT_SUBMARINE = "A........\nB........\nC....S...\nD........\nE........\nF........\nG........\nH........\n.12345678"
+GAME_SHEET_WITH_HIT_AIRCRAFT_CARRIER = "AXAXAA...\nB.x.x....\nC........\nD........\nE........\nF........\nG........\nH........\n.12345678"
 
 
 class GameSheetTest(TestCase):
@@ -58,6 +59,16 @@ class GameSheetTest(TestCase):
     def test_should_record_a_miss(self):
         self.game.add_ship(AircraftCarrier('A1', Horizontal))
         self.assertIsInstance(self.game.fire("B1"), Miss)
+
+    def test_should_show_record_of_hits_and_misses(self):
+        self.game.add_ship(AircraftCarrier('A1', Horizontal))
+        self.game.fire("B2")
+        self.game.fire("B4")
+        self.game.fire("A1")
+        self.game.fire("A3")
+
+        self.assertEquals(GAME_SHEET_WITH_HIT_AIRCRAFT_CARRIER, str(self.game))
+
 
     def _assert_ships_placed(self, game, expected_ships):
         sheet = self._clean_sheet(game)

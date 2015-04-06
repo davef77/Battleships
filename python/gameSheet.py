@@ -1,6 +1,7 @@
 from random import randint, choice
 from python.game_utils import parse_location
 from python.orientation import ORIENTATIONS
+from python.ships import Miss
 
 MAX_COLUMNS = 8
 MAX_ROWS = 8
@@ -27,9 +28,10 @@ class GameSheet:
 
     def fire(self, location):
         row, column = parse_location(location)
-        self._set_cell_value(row, column, 'x')
+        fire_result = self.rules.fire(location)
+        self._set_cell_value(row, column, self._format_fire_result(fire_result))
 
-        return self.rules.fire(location)
+        return fire_result
 
     def position_ships(self):
         for ship_type in self.rules.list_ship_types():
@@ -43,6 +45,12 @@ class GameSheet:
 
     def _set_cell_value(self, row, column, value):
         self.sheet[row][column - 1] = value
+
+    def _format_fire_result(self, result):
+        if isinstance(result, Miss):
+            return 'x'
+        else:
+            return 'X'
 
     def __str__(self):
         sheet = ""
