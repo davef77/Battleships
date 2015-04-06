@@ -1,18 +1,16 @@
 from random import randint, choice
+from python.gameSheet_renderer import DefenseSheetRenderer, HitAndMissesSheetRenderer, MAX_COLUMNS, MAX_ROWS, ROW_NAMES
 from python.game_utils import parse_location
 from python.orientation import ORIENTATIONS
 from python.ships import Miss
-
-MAX_COLUMNS = 8
-MAX_ROWS = 8
-
-ROW_NAMES = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
 
 
 class GameSheet:
 
     def __init__(self, rules):
         self.rules = rules
+        self.offense_sheet_renderer = DefenseSheetRenderer()
+        self.hits_and_misses_sheet_renderer = HitAndMissesSheetRenderer()
         self.sheet = {}
         self.width = MAX_COLUMNS
         self.height = MAX_ROWS
@@ -37,11 +35,14 @@ class GameSheet:
         for ship_type in self.rules.list_ship_types():
             self._place_ship_at_random_position(ship_type)
 
+    def hits_and_misses(self):
+        return self.hits_and_misses_sheet_renderer.render_sheet(self.sheet)
+
     def on_cell_occupied(self, row, column, value):
         self._set_cell_value(row, column, value)
 
-    def _cell_value(self, row, column):
-        return self.sheet[row][column]
+    def __str__(self):
+        return self.offense_sheet_renderer.render_sheet(self.sheet)
 
     def _set_cell_value(self, row, column, value):
         self.sheet[row][column - 1] = value
@@ -51,34 +52,6 @@ class GameSheet:
             return 'x'
         else:
             return 'X'
-
-    def __str__(self):
-        sheet = ""
-
-        for row in ROW_NAMES:
-            sheet = self.__render_row(row, sheet)
-
-        sheet += self.__footer()
-
-        return sheet
-
-    def __render_row(self, row, sheet):
-        sheet += row
-
-        for column in range(0, MAX_COLUMNS):
-            sheet += self._cell_value(row, column)
-
-        sheet += '\n'
-
-        return sheet
-
-    def __footer(self):
-        footer = '.'
-
-        for column in range(0, MAX_COLUMNS):
-            footer += str(column + 1)
-
-        return footer
 
     def __init_row(self, row):
         self.sheet[row] = []

@@ -1,4 +1,4 @@
-ROW_NAMES = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+from python.gameSheet_renderer import ROW_NAMES
 
 
 class Horizontal():
