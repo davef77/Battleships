@@ -2,7 +2,7 @@ from python.gameSheet import GameSheet
 from python.game_utils import random_location
 from python.orientation import Horizontal, Vertical
 from python.rules import Rules
-from python.ships import AircraftCarrier, Battleship, Cruiser, Destroyer, Submarine
+from python.ships import AircraftCarrier, Battleship, Cruiser, Destroyer, Submarine, GameOver
 
 
 class BattleShips(object):
@@ -22,6 +22,9 @@ class BattleShips(object):
 
     def fire(self, player, location):
         fire_result = self._other_players_sheet(player).fire(location)
+
+        if isinstance(fire_result, GameOver):
+            raise Warning("Game Over - %s Wins!" % player)
 
         if self.computer_player:
             self.players[player].fire(random_location())

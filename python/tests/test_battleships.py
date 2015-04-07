@@ -100,7 +100,8 @@ class BattleShipsTest(TestCase):
 
         self.battleships.fire("Player2", "B1")
         self.assertIsInstance(self.battleships.fire("Player2", "G1"), Sunk)
-        self.assertIsInstance(self.battleships.fire("Player2", "B2"), GameOver)
+
+        self.assertRaisesWithMessage("Game Over - Player2 Wins!", self.battleships.fire, "Player2", "B2")
 
     def _real_factory(self):
         self.factory = GameSheetFactory()
@@ -110,6 +111,14 @@ class BattleShipsTest(TestCase):
         self.factory = MagicMock(spec=GameSheetFactory)
         self.battleships = BattleShips(self.factory)
 
+    def assertRaisesWithMessage(self, msg, func, *args, **kwargs):
+        try:
+            func(*args, **kwargs)
+            self.fail()
+        except Exception as inst:
+            self.assertEqual(inst.message, msg)
+
 
 def count_hits_and_misses(sheet):
     return sheet.count('x') + sheet.count('X')
+
