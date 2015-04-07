@@ -2,7 +2,7 @@ from unittest import TestCase
 from mock import MagicMock
 from python.battleships import BattleShips
 from python.game_sheet_factory import GameSheetFactory
-from python.ships import Hit
+from python.ships import Hit, GameOver, Miss, Sunk
 
 
 ROW_A_START = 0
@@ -36,6 +36,12 @@ class BattleShipsTest(TestCase):
         self.battleships.place_ship("Player2", "AB1H")
 
         self.assertIsInstance(self.battleships.fire("Player1", "B2"), Hit)
+
+    def test_should_report_a_miss(self):
+        self.battleships.new_game("Player1", "Player2")
+        self.battleships.place_ship("Player2", "AB1H")
+
+        self.assertIsInstance(self.battleships.fire("Player1", "C2"), Miss)
 
     def test_should_show_my_hits(self):
         self.battleships.new_game("Player1", "Player2")
@@ -86,6 +92,15 @@ class BattleShipsTest(TestCase):
         self.battleships.fire("Player1", "A2")
 
         self.assertEquals(1, count_hits_and_misses(self.battleships.show_defense("Player1")))
+
+    def test_should_report_winner_when_there_are_no_more_ships_to_sink(self):
+        self.battleships.new_game("Player1", "Player2")
+        self.battleships.place_ship("Player1", "SG1H")
+        self.battleships.place_ship("Player1", "DB1H")
+
+        self.battleships.fire("Player2", "B1")
+        self.assertIsInstance(self.battleships.fire("Player2", "G1"), Sunk)
+        self.assertIsInstance(self.battleships.fire("Player2", "B2"), GameOver)
 
     def _real_factory(self):
         self.factory = GameSheetFactory()

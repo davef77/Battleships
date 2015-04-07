@@ -1,6 +1,7 @@
 from python.game_utils import parse_location
 
 
+class GameOver: pass
 class Hit: pass
 class Miss: pass
 class Sunk:

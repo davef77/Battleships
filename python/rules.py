@@ -1,5 +1,5 @@
 from python.gameSheet import ROW_NAMES
-from python.ships import AircraftCarrier, Battleship, Cruiser, Destroyer, Submarine, Miss, Sunk
+from python.ships import AircraftCarrier, Battleship, Cruiser, Destroyer, Submarine, Miss, Sunk, GameOver
 
 
 class Rules:
@@ -37,13 +37,6 @@ class Rules:
         self.ship_being_placed = ship
         ship.orientation.place_ship(self, ship)
 
-    def _process_hit(self, location):
-        hit_ship = self.occupied_cells[location]
-        hit_result = hit_ship.hit()
-        if isinstance(hit_result, Sunk):
-            self._remove_ship(hit_ship)
-        return hit_result
-
     def _assert_fits_on_sheet(self, sheet, ship):
         max_column = sheet.width - ship.orientation.width(ship.waterline_length, ship.beam) + 1
         max_row = sheet.height - ship.orientation.height(ship.waterline_length, ship.beam) + 1
@@ -65,6 +58,21 @@ class Rules:
     def _assert_within_allowed_number_for_type(self, ship):
         if self.ships.has_key(ship.id) and self.ships[ship.id] == ship.max_of_type:
             raise Warning("Can't add more than %s %ss" % (ship.max_of_type, ship.__class__))
+
+    def _process_hit(self, location):
+        hit_ship = self.occupied_cells[location]
+        hit_result = hit_ship.hit()
+
+        return self._process_sunk_ships(hit_result, hit_ship)
+
+    def _process_sunk_ships(self, hit_result, hit_ship):
+        if isinstance(hit_result, Sunk):
+            self._remove_ship(hit_ship)
+
+            if not self.occupied_cells:
+                hit_result = GameOver()
+
+        return hit_result
 
     def _remove_ship(self, hit_ship):
         for cell in self.occupied_cells.items():
