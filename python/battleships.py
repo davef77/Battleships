@@ -29,6 +29,9 @@ class BattleShips(object):
 
         self.game_listener.on_place_ship(player, ship)
 
+    def place_ships(self, player):
+        self.players[player].position_ships()
+
     def fire(self, player, location):
         fire_result = self._other_players_sheet(player).fire(location)
 

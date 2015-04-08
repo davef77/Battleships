@@ -15,7 +15,6 @@ class Ship():
     def __init__(self, location, orientation):
         self.row, self.column = parse_location(location)
         self.orientation = orientation
-        self.waterline_length = 0
         self.hit_count = 0
 
     def hit(self):
