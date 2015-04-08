@@ -7,15 +7,17 @@ from python.ships import AircraftCarrier, Battleship, Cruiser, Destroyer, Submar
 
 class BattleShips(object):
 
-    def __init__(self, game_sheet_factory):
+    def __init__(self, game_sheet_factory, player1, player2):
         self.game_sheet_factory = game_sheet_factory
-        self.players = {}
-        self.computer_player = False
-
-    def new_game(self, player1, player2):
+        self.players = {player1: None, player2: None}
+        self.scores = {}
         self.computer_player = "Computer" in [player1, player2]
-        self.players[player1] = self.game_sheet_factory.create_game_sheet()
-        self.players[player2] = self.game_sheet_factory.create_game_sheet()
+        self.scores[player1] = 0
+        self.scores[player2] = 0
+
+    def new_game(self):
+        for player in self.players:
+            self.players[player] = self.game_sheet_factory.create_game_sheet()
 
     def place_ship(self, player, ship_details):
         self.players[player].add_ship(self._create_ship(ship_details))
@@ -24,6 +26,7 @@ class BattleShips(object):
         fire_result = self._other_players_sheet(player).fire(location)
 
         if isinstance(fire_result, GameOver):
+            self.scores[player] += 1
             raise Warning("Game Over - %s Wins!" % player)
 
         if self.computer_player:
@@ -37,6 +40,9 @@ class BattleShips(object):
     def show_offense(self, player):
         return str(self._other_players_sheet(player).hits_and_misses())
 
+    def score(self, player):
+        return self.scores[player]
+
     def _create_ship(self, ship_details):
         ship_class, location, orientation = parse_ship_details(ship_details)
         return ship_class(location, orientation)
@@ -48,6 +54,7 @@ class BattleShips(object):
         for key in self.players.keys():
             if key is not player:
                 return key
+
 
 def parse_ship_details(ship_details):
     return _ship_type(ship_details[0:1]), ship_details[1:3], _orientation(ship_details[-1:])
