@@ -1,9 +1,11 @@
 from unittest import TestCase
+
 from mock import MagicMock
+
 from python.battleships import BattleShips
 from python.game_sheet_factory import GameSheetFactory
 from python.ships import Hit, Miss
-from python.tests.game_stats_repository import GameStatsRepository
+from python.game_stats_repository import GameStatsRepository
 
 
 ROW_A_START = 0

@@ -1,7 +1,7 @@
 from python.game_utils import random_location
 from python.orientation import Horizontal, Vertical
 from python.ships import AircraftCarrier, Battleship, Cruiser, Destroyer, Submarine, GameOver
-from python.tests.game_stats_repository import GameStatsRepository
+from python.game_stats_repository import GameStatsRepository
 
 
 class BattleShips(object):
