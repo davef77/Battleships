@@ -1,14 +1,14 @@
-from python.gameSheet import GameSheet
 from python.game_utils import random_location
 from python.orientation import Horizontal, Vertical
-from python.rules import Rules
 from python.ships import AircraftCarrier, Battleship, Cruiser, Destroyer, Submarine, GameOver
+from python.tests.game_stats_repository import GameStatsRepository
 
 
 class BattleShips(object):
 
-    def __init__(self, game_sheet_factory, player1, player2):
+    def __init__(self, game_sheet_factory, game_stats_repo, player1, player2):
         self.game_sheet_factory = game_sheet_factory
+        self.game_stats_repo = game_stats_repo
         self.players = {player1: None, player2: None}
         self.scores = {}
         self.computer_player = "Computer" in [player1, player2]
@@ -26,11 +26,9 @@ class BattleShips(object):
         fire_result = self._other_players_sheet(player).fire(location)
 
         if isinstance(fire_result, GameOver):
-            self.scores[player] += 1
-            raise Warning("Game Over - %s Wins!" % player)
+            self._end_game(player)
 
-        if self.computer_player:
-            self.players[player].fire(random_location())
+        self._computers_move(player)
 
         return fire_result
 
@@ -46,6 +44,15 @@ class BattleShips(object):
     def _create_ship(self, ship_details):
         ship_class, location, orientation = parse_ship_details(ship_details)
         return ship_class(location, orientation)
+
+    def _computers_move(self, player):
+        if self.computer_player:
+            self.players[player].fire(random_location())
+
+    def _end_game(self, player):
+        self.scores[player] += 1
+        self.game_stats_repo.store_game_result(player, self._other_player(player))
+        raise Warning("Game Over - %s Wins!" % player)
 
     def _other_players_sheet(self, player):
         return self.players[self._other_player(player)]
@@ -82,7 +89,7 @@ def _orientation(orientation):
 
 
 if __name__ == "__main__":
-    battleships = BattleShips()
+    battleships = BattleShips(GameStatsRepository())
 
     print battleships.new_game()
 

@@ -1,7 +1,9 @@
 from unittest import TestCase
+from mock import MagicMock
 from python.battleships import BattleShips
 from python.game_sheet_factory import GameSheetFactory
 from python.ships import Hit, Miss
+from python.tests.game_stats_repository import GameStatsRepository
 
 
 ROW_A_START = 0
@@ -14,7 +16,8 @@ ROW_B_END = 19
 class BattleShipsTest(TestCase):
 
     def setUp(self):
-        self.battleships = BattleShips(GameSheetFactory(), "Player1", "Player2")
+        self.mock_game_stats = MagicMock(spec=GameStatsRepository)
+        self.battleships = BattleShips(GameSheetFactory(), self.mock_game_stats, "Player1", "Player2")
 
     def test_should_place_ship(self):
         self.battleships.new_game()
@@ -75,7 +78,7 @@ class BattleShipsTest(TestCase):
         self.assertEquals("A.x......", defense[ROW_A_START:ROW_A_END])
 
     def test_should_return_fire_after_each_move_when_playing_against_the_computer(self):
-        self.battleships = BattleShips(GameSheetFactory(), "Player1", "Computer")
+        self.battleships = BattleShips(GameSheetFactory(), self.mock_game_stats, "Player1", "Computer")
         self.battleships.new_game()
         self.battleships.place_ship("Player1", "AB1H")
 
@@ -95,6 +98,11 @@ class BattleShipsTest(TestCase):
 
         self.assertEquals(1, self.battleships.score("Player1"))
         self.assertEquals(2, self.battleships.score("Player2"))
+
+    def test_should_store_results_in_game_stats_repository(self):
+        self._play_game("Player2")
+
+        self.mock_game_stats.store_game_result.assert_called_once_with("Player2", "Player1")
 
     def _play_game(self, winner):
         self.battleships.new_game()
