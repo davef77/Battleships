@@ -6,9 +6,11 @@ from python.game_stats_repository import GameStatsRepository
 
 class BattleShips(object):
 
-    def __init__(self, game_sheet_factory, game_stats_repo, player1, player2):
+    def __init__(self, game_sheet_factory, game_stats_repo, game_listener, player1, player2):
         self.game_sheet_factory = game_sheet_factory
         self.game_stats_repo = game_stats_repo
+        self.game_listener = game_listener
+
         self.players = {player1: None, player2: None}
         self.scores = {}
         self.computer_player = "Computer" in [player1, player2]
@@ -19,11 +21,18 @@ class BattleShips(object):
         for player in self.players:
             self.players[player] = self.game_sheet_factory.create_game_sheet()
 
+        self.game_listener.on_new_game(self.players.keys()[1], self.players.keys()[0])
+
     def place_ship(self, player, ship_details):
-        self.players[player].add_ship(self._create_ship(ship_details))
+        ship = self._create_ship(ship_details)
+        self.players[player].add_ship(ship)
+
+        self.game_listener.on_place_ship(player, ship)
 
     def fire(self, player, location):
         fire_result = self._other_players_sheet(player).fire(location)
+
+        self.game_listener.on_fire(player, location, fire_result)
 
         if isinstance(fire_result, GameOver):
             self._end_game(player)
@@ -89,7 +98,7 @@ def _orientation(orientation):
 
 
 if __name__ == "__main__":
-    battleships = BattleShips(GameStatsRepository())
+    battleships = BattleShips(GameStatsRepository(), self.laser_display, )
 
     print battleships.new_game()
 

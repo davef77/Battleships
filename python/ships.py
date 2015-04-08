@@ -1,30 +1,33 @@
 from python.game_utils import parse_location
 
 
-class GameOver: pass
-class Hit: pass
-class Miss: pass
-class Sunk:
-    def __init__(self, ship):
-        self.ship = ship
+class Result:
+    def __eq__(self, other):
+        return self.__class__ == other.__class__
 
-    def __str__(self):
-        return "You sunk my %s" % self.ship.__class__.__name__
+class GameOver(Result): pass
+class Hit(Result): pass
+class Miss(Result): pass
+class Sunk(Result): pass
 
 
 class Ship():
     def __init__(self, location, orientation):
         self.row, self.column = parse_location(location)
         self.orientation = orientation
+        self.waterline_length = 0
         self.hit_count = 0
 
     def hit(self):
         self.hit_count += 1
 
         if self.hit_count == self.waterline_length:
-            return Sunk(self)
+            return Sunk()
         else:
             return Hit()
+
+    def __eq__(self, other):
+        return self.row == other.row and self.column == other.column and self.orientation == other.orientation
 
 
 class AircraftCarrier(Ship):

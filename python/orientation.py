@@ -16,6 +16,8 @@ class Horizontal():
         for column in range(ship.column, ship.column + ship.waterline_length):
             position_listener.on_cell_occupied(ship.row, column, ship.id)
 
+    def __eq__(self, other):
+        return self.__class__ == other.__class__
 
 class Vertical():
 
@@ -32,6 +34,10 @@ class Vertical():
         ship_row = ROW_NAMES.index(ship.row)
         for row in ROW_NAMES[ship_row:ship_row + ship.waterline_length]:
             position_listener.on_cell_occupied(row, ship.column, ship.id)
+
+    def __eq__(self, other):
+        return self.__class__ == other.__class__
+
 
 ORIENTATIONS = [Vertical, Horizontal]
 
