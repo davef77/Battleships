@@ -1,17 +1,12 @@
-from python.gameSheet import GameSheet
 
 
 class BattleShips(object):
 
+    def __init__(self, game_sheet_factory):
+        self.game_sheet_factory = game_sheet_factory
+
     def new_game(self):
-        return GameSheet()
-
-
-if __name__ == "__main__":
-    battleships = BattleShips()
-
-    print battleships.new_game()
-
+        self.game_sheet_factory.create_game_sheet()
 
 
 
