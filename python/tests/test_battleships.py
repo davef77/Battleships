@@ -5,9 +5,6 @@ from python.battleships import BattleShips
 from python.game_sheet_factory import GameSheetFactory
 
 
-ROW_A_START = 0
-ROW_A_END = 9
-
 ROW_B_START = 10
 ROW_B_END = 19
 
