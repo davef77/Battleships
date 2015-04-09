@@ -1,13 +1,31 @@
 from unittest import TestCase
+from mock import MagicMock
+
 from python.battleships import BattleShips
-from python.gameSheet import GameSheet
+from python.game_sheet_factory import GameSheetFactory
+
+
+ROW_A_START = 0
+ROW_A_END = 9
+
+ROW_B_START = 10
+ROW_B_END = 19
 
 
 class BattleShipsTest(TestCase):
 
-    def test_should_create_game(self):
-        self.battleships = BattleShips()
+    def setUp(self):
+        self.battleships = BattleShips(GameSheetFactory())
 
-        game = self.battleships.new_game()
+    def test_should_create_new_game(self):
+        mock_factory = MagicMock(GameSheetFactory)
+        self.battleships = BattleShips(mock_factory)
+        self.battleships.new_game()
 
-        self.assertIsInstance(game, GameSheet)
+        mock_factory.create_game_sheet.assert_called_with()
+
+    def test_should_place_ship(self):
+        self.battleships.new_game()
+        self.battleships.place_ship("AB1H")
+
+        self.assertEquals("BAAAAA...", str(self.battleships.sheet)[ROW_B_START:ROW_B_END])
