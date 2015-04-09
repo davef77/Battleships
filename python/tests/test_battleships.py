@@ -50,6 +50,12 @@ class BattleShipsTest(TestCase):
         self.assertHasShipId(defense, "D", 4)
         self.assertHasShipId(defense, "S", 2)
 
+    def test_should_record_a_shot(self):
+        self.battleships.new_game()
+
+        self.battleships.fire("Player1", "B2")
+        self.assertEquals("B.x......", self.battleships.show_defense("Player2")[ROW_B_START:ROW_B_END])
+
     def test_should_report_a_hit(self):
         self.battleships.new_game()
         self.battleships.place_ship("Player2", "AB1H")
