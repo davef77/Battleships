@@ -2,14 +2,13 @@ package com.cd.battleships;
 
 public class BattleShips {
 
-    public void play() {
+    public BattleShips(GameSheetFactory factory)
+    {
 
     }
 
-    public static void main(String args[]) {
-        BattleShips battleShips = new BattleShips();
+    public void newGame() {
 
-        battleShips.play();
     }
 }
 
