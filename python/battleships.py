@@ -1,10 +1,9 @@
 from python.game_utils import random_location
 from python.orientation import Horizontal, Vertical
 from python.ships import AircraftCarrier, Battleship, Cruiser, Destroyer, Submarine, GameOver
-from python.game_stats_repository import GameStatsRepository
 
 
-class BattleShips(object):
+class BattleShips():
 
     def __init__(self, game_sheet_factory, game_stats_repo, game_listener, player1, player2):
         self.game_sheet_factory = game_sheet_factory
@@ -21,7 +20,7 @@ class BattleShips(object):
         for player in self.players:
             self.players[player] = self.game_sheet_factory.create_game_sheet()
 
-        self.game_listener.on_new_game(self.players.keys()[1], self.players.keys()[0])
+        self.game_listener.on_new_game(list(self.players.keys())[1], self.players.keys()[0])
 
     def place_ship(self, player, ship_details):
         ship = self._create_ship(ship_details)
@@ -99,11 +98,6 @@ def _orientation(orientation):
         return Vertical
 
 
-
-if __name__ == "__main__":
-    battleships = BattleShips(GameStatsRepository(), self.laser_display, )
-
-    print battleships.new_game()
 
 
 
